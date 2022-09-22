@@ -35,16 +35,38 @@ public class ArticleListServlet extends HttpServlet {
     // DB 연결
     Connection con = null;
 
+
     try {
       con = DriverManager.getConnection(url, user, password);
 
-      SecSql sql = SecSql.from("SELECT *");
+      int page = 1;
+
+      if (req.getParameter("page") != null && req.getParameter("page").length() != 0) {
+        page = Integer.parseInt(req.getParameter("page"));
+      }
+
+      int itemsInAPage = 10;
+
+      int limitFrom = (page - 1) * itemsInAPage;
+
+      SecSql sql = SecSql.from("SELECT COUNT(*) AS cnt");
+      sql.append("FROM article");
+      int totalCount = DBUtil.selectRowIntValue(con, sql);
+
+      int totalPage = (int)Math.ceil((double) totalCount / itemsInAPage);
+
+      sql = SecSql.from("SELECT *");
       sql.append("FROM article");
       sql.append("ORDER BY id DESC");
+      sql.append("LIMIT ?, ?", limitFrom, itemsInAPage);
+
+      System.out.println(sql);
 
       List<Map<String, Object>> articleRows = DBUtil.selectRows(con, sql);
 
       req.setAttribute("articleRows", articleRows);
+      req.setAttribute("page", page);
+      req.setAttribute("totalPage", totalPage);
       req.getRequestDispatcher("../article/list.jsp").forward(req, resp);
     } catch (SQLException e) {
       e.printStackTrace();
