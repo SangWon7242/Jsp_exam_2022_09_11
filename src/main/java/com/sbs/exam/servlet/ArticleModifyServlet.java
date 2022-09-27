@@ -1,5 +1,6 @@
 package com.sbs.exam.servlet;
 
+import com.sbs.exam.Config;
 import com.sbs.exam.util.DBUtil;
 import com.sbs.exam.util.SecSql;
 import jakarta.servlet.ServletException;
@@ -23,8 +24,10 @@ public class ArticleModifyServlet extends HttpServlet {
     String user = "sbsst";
     String password = "sbs123414";
 
+    String driverName = Config.getDriverClassName();
+
     try {
-      Class.forName("com.mysql.jdbc.Driver");
+      Class.forName(driverName);
     } catch (ClassNotFoundException e) {
       System.out.printf("[ClassNotFoundException 예외, %s]", e.getMessage());
       resp.getWriter().append("DB 드라이버 클래스 로딩 실패");
@@ -35,7 +38,7 @@ public class ArticleModifyServlet extends HttpServlet {
     Connection con = null;
 
     try {
-      con = DriverManager.getConnection(url, user, password);
+      con = DriverManager.getConnection(Config.getDBUrl(), Config.getDBId(), Config.getDBPw());
 
       int id = Integer.parseInt(req.getParameter("id"));
 
