@@ -13,7 +13,7 @@ public class Config {
     return "sbs123414";
   }
 
-  public static String getDriverClassName() {
+  public static String getDbDriverClassName() {
     return "com.mysql.jdbc.Driver";
   }
 }
