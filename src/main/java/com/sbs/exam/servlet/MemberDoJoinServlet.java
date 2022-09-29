@@ -44,7 +44,19 @@ public class MemberDoJoinServlet extends HttpServlet {
       String loginPw = req.getParameter("loginPw");
       String name = req.getParameter("name");
 
-      SecSql sql = SecSql.from("INSERT INTO member");
+      SecSql sql = SecSql.from("SELECT COUNT(*) AS cnt");
+      sql.append("FROM member");
+      sql.append("WHERE loginId = ?", loginId);
+
+      boolean isJoinAvailableLoginId = DBUtil.selectRowIntValue(con, sql) == 0;
+
+      if ( isJoinAvailableLoginId == false ) {
+        resp.getWriter().append(String.format("<script> alert('%s (은)는 이미 사용중인 로그인 아이디 입니다.'); history.back(); </script>", loginId));
+
+        return;
+      }
+
+      sql = SecSql.from("INSERT INTO member");
       sql.append("SET regDate = NOW()");
       sql.append(", updateDate = NOW()");
       sql.append(", loginId = ?", loginId);
@@ -52,7 +64,7 @@ public class MemberDoJoinServlet extends HttpServlet {
       sql.append(", name = ?", name);
 
       int id = DBUtil.insert(con, sql);
-      resp.getWriter().append(String.format("<script> alert('%d번 회원이 생성되었습니다.'); location.replace('../home/main'); </script>", id));
+      resp.getWriter().append(String.format("<script> alert('%d번 회원이 생성되었습니다.');  location.replace('../home/main'); </script>", id));
 
 
     } catch (
