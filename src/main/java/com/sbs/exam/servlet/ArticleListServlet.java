@@ -1,6 +1,7 @@
 package com.sbs.exam.servlet;
 
 import com.sbs.exam.Config;
+import com.sbs.exam.exception.SQLErrorException;
 import com.sbs.exam.util.DBUtil;
 import com.sbs.exam.util.SecSql;
 import jakarta.servlet.ServletException;
@@ -59,8 +60,6 @@ public class ArticleListServlet extends HttpServlet {
       sql.append("ORDER BY id DESC");
       sql.append("LIMIT ?, ?", limitFrom, itemsInAPage);
 
-      System.out.println(sql);
-
       List<Map<String, Object>> articleRows = DBUtil.selectRows(con, sql);
 
       req.setAttribute("articleRows", articleRows);
@@ -69,6 +68,8 @@ public class ArticleListServlet extends HttpServlet {
       req.getRequestDispatcher("../article/list.jsp").forward(req, resp);
     } catch (SQLException e) {
       e.printStackTrace();
+    } catch ( SQLErrorException e ) {
+      e.getOrigin().printStackTrace();
     } finally {
       if (con != null) {
         try {
