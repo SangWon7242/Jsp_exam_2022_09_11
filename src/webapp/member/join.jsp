@@ -6,7 +6,7 @@
   <title>회원가입</title>
 </head>
 <body>
-  <h1 onclick="alert('HI'); return false;">회원가입</h1>
+  <h1>회원가입</h1>
 
   <script>
     let JoinFrom__submitDone = false;
