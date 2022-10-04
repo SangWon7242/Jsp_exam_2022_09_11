@@ -26,7 +26,7 @@ public class ArticleDoWriteServlet extends HttpServlet {
 
     HttpSession session = req.getSession();
 
-    if ( session.getAttribute("loginedMemberId") == null ) {
+    if (session.getAttribute("loginedMemberId") == null) {
       resp.getWriter().append(
           String.format("<script> alert('로그인 후 이용해주세요.'); location.replace('../member/login'); </script>"));
       return;
@@ -53,7 +53,7 @@ public class ArticleDoWriteServlet extends HttpServlet {
       String title = req.getParameter("title");
       String body = req.getParameter("body");
 
-      int loginedMemberId = (int)session.getAttribute("loginedMemberId");
+      int loginedMemberId = (int) session.getAttribute("loginedMemberId");
 
       SecSql sql = SecSql.from("INSERT INTO article");
       sql.append("SET regDate = NOW()");
@@ -69,7 +69,7 @@ public class ArticleDoWriteServlet extends HttpServlet {
     } catch (
         SQLException e) {
       e.printStackTrace();
-    } catch ( SQLErrorException e ) {
+    } catch (SQLErrorException e) {
       e.getOrigin().printStackTrace();
     } finally {
       if (con != null) {

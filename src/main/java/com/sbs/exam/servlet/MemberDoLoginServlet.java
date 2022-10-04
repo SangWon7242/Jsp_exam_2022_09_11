@@ -65,7 +65,7 @@ public class MemberDoLoginServlet extends HttpServlet {
       HttpSession session = req.getSession();
       session.setAttribute("loginedMemberId", memberRow.get("id"));
 
-      resp.getWriter().append(String.format("<script> alert('로그인 성공'); location.replace('../main/home'); </script>"));
+      resp.getWriter().append(String.format("<script> alert('로그인 성공'); location.replace('../home/main'); </script>"));
 
     } catch (
         SQLException e) {
