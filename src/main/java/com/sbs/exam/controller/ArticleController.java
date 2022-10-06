@@ -1,5 +1,6 @@
 package com.sbs.exam.controller;
 
+import com.sbs.exam.service.ArticleService;
 import com.sbs.exam.util.DBUtil;
 import com.sbs.exam.util.SecSql;
 import jakarta.servlet.ServletException;
@@ -16,37 +17,24 @@ public class ArticleController {
   private HttpServletRequest req;
   private HttpServletResponse resp;
   private Connection con;
+  private ArticleService articleService;
 
   public ArticleController(HttpServletRequest req, HttpServletResponse resp, Connection con) {
     this.req = req;
     this.resp = resp;
-    this.con = con;
+
+    articleService = new ArticleService(con);
   }
 
   public void actionList() throws ServletException, IOException {
-
     int page = 1;
 
     if (req.getParameter("page") != null && req.getParameter("page").length() != 0) {
       page = Integer.parseInt(req.getParameter("page"));
     }
 
-    int itemsInAPage = 10;
-
-    int limitFrom = (page - 1) * itemsInAPage;
-
-    SecSql sql = SecSql.from("SELECT COUNT(*) AS cnt");
-    sql.append("FROM article");
-    int totalCount = DBUtil.selectRowIntValue(con, sql);
-
-    int totalPage = (int) Math.ceil((double) totalCount / itemsInAPage);
-
-    sql = SecSql.from("SELECT *");
-    sql.append("FROM article");
-    sql.append("ORDER BY id DESC");
-    sql.append("LIMIT ?, ?", limitFrom, itemsInAPage);
-
-    List<Map<String, Object>> articleRows = DBUtil.selectRows(con, sql);
+    int totalPage = articleService.getForPrintListTotalPage();
+    List<Map<String, Object>> articleRows = articleService.getForPrintArticleRows(page);
 
     req.setAttribute("articleRows", articleRows);
     req.setAttribute("page", page);

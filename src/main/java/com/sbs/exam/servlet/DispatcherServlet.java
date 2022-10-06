@@ -18,7 +18,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Map;
 
-@WebServlet("/s/*")
+@WebServlet("/usr/*")
 public class DispatcherServlet extends HttpServlet {
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -29,7 +29,7 @@ public class DispatcherServlet extends HttpServlet {
     String requestUri = req.getRequestURI();
     String[] requestUriBits = requestUri.split("/");
 
-    if ( requestUriBits.length < 4 ) {
+    if ( requestUriBits.length < 5 ) {
       resp.getWriter().append("올바른 요청이 아닙니다.");
       return;
     }
@@ -71,8 +71,8 @@ public class DispatcherServlet extends HttpServlet {
       req.setAttribute("loginedMemberRow", loginedMemberRow);
       // 모든 요청을 들어가기 전에 무조건 해야 하는 일 시작
 
-      String controllerName = requestUriBits[2];
-      String actionMethodName = requestUriBits[3];
+      String controllerName = requestUriBits[3];
+      String actionMethodName = requestUriBits[4];
 
       if ( controllerName.equals("article")) {
         ArticleController controller = new ArticleController(req, resp, con);
