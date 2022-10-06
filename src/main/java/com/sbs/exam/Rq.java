@@ -8,8 +8,11 @@ import java.io.UnsupportedEncodingException;
 
 public class Rq {
 
-  private final HttpServletRequest req;
-  private final HttpServletResponse resp;
+  private HttpServletRequest req;
+  private HttpServletResponse resp;
+  private boolean isInvalid = false;
+  private String controllerName;
+  private String actionMethodName;
 
   public Rq(HttpServletRequest req, HttpServletResponse resp) {
     this.req = req;
@@ -22,7 +25,35 @@ public class Rq {
     }
     resp.setCharacterEncoding("UTF-8");
     resp.setContentType("text/html; charset=utf-8");
+
+    String requestUri = req.getRequestURI();
+    String[] requestUriBits = requestUri.split("/");
+
+    if ( requestUriBits.length < 4 ) {
+      isInvalid = true;
+      return;
+    }
+
+    this.controllerName = requestUriBits[2];
+    this.actionMethodName = requestUriBits[3];
   }
+
+  public HttpServletRequest getReq() {
+    return req;
+  }
+
+  public boolean isInvalid() {
+    return isInvalid;
+  }
+
+  public String getControllerName() {
+    return controllerName;
+  }
+
+  public String getActionMethodName() {
+    return actionMethodName;
+  }
+
 
   public int getIntParam(String paramName, int defaultValue) {
     String value = req.getParameter(paramName);

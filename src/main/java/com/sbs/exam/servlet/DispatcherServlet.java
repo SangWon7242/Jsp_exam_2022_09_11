@@ -1,6 +1,7 @@
 package com.sbs.exam.servlet;
 
 import com.sbs.exam.Config;
+import com.sbs.exam.Rq;
 import com.sbs.exam.controller.ArticleController;
 import com.sbs.exam.exception.SQLErrorException;
 import com.sbs.exam.util.DBUtil;
@@ -23,14 +24,10 @@ public class DispatcherServlet extends HttpServlet {
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-    req.setCharacterEncoding("UTF-8");
-    resp.setContentType("text/html; charset=UTF-8");
+    Rq rq = new Rq(req, resp);
 
-    String requestUri = req.getRequestURI();
-    String[] requestUriBits = requestUri.split("/");
-
-    if ( requestUriBits.length < 4 ) {
-      resp.getWriter().append("올바른 요청이 아닙니다.");
+    if (rq.isInvalid()) {
+      rq.appendBody("올바른 요청이 아닙니다.");
       return;
     }
 
@@ -71,20 +68,17 @@ public class DispatcherServlet extends HttpServlet {
       req.setAttribute("loginedMemberRow", loginedMemberRow);
       // 모든 요청을 들어가기 전에 무조건 해야 하는 일 시작
 
-      String controllerName = requestUriBits[2];
-      String actionMethodName = requestUriBits[3];
-
-      if ( controllerName.equals("article") ) {
+      if ( rq.getControllerName().equals("article") ) {
         ArticleController controller = new ArticleController(req, resp, con);
 
-        if ( actionMethodName.equals("list") ) {
+        if ( rq.getActionMethodName().equals("list") ) {
           controller.actionList();
         }
       }
 
     } catch (SQLException e) {
       e.printStackTrace();
-    } catch ( SQLErrorException e ) {
+    } catch (SQLErrorException e) {
       e.getOrigin().printStackTrace();
     } finally {
       if (con != null) {

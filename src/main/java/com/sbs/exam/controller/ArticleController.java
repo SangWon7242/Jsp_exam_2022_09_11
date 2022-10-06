@@ -1,5 +1,6 @@
 package com.sbs.exam.controller;
 
+import com.sbs.exam.Rq;
 import com.sbs.exam.dto.Article;
 import com.sbs.exam.service.ArticleService;
 import jakarta.servlet.ServletException;
@@ -11,7 +12,6 @@ import java.sql.Connection;
 import java.util.List;
 
 public class ArticleController {
-
   private HttpServletRequest req;
   private HttpServletResponse resp;
   private Connection con;
