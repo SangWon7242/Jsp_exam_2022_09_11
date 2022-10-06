@@ -65,7 +65,7 @@ public class ArticleDetailServlet extends HttpServlet {
 
       Map<String, Object> articleRow = DBUtil.selectRow(con, sql);
       req.setAttribute("articleRow", articleRow);
-      req.getRequestDispatcher("../article/detail.jsp").forward(req, resp);
+      req.getRequestDispatcher("/jsp/article/detail.jsp").forward(req, resp);
 
     } catch (SQLException e) {
       e.printStackTrace();

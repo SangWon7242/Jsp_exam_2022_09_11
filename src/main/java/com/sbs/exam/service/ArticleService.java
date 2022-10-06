@@ -1,6 +1,7 @@
 package com.sbs.exam.service;
 
 import com.sbs.exam.dao.ArticleDao;
+import com.sbs.exam.dto.Article;
 import com.sbs.exam.util.DBUtil;
 import com.sbs.exam.util.SecSql;
 
@@ -28,12 +29,12 @@ public class ArticleService {
     return totalPage;
   }
 
-  public List<Map<String, Object>> getForPrintArticleRows(int page) {
+  public List<Article> getForPrintArticles(int page) {
     int itemsInAPage = getItemsInAPage();
     int limitFrom = (page - 1) * itemsInAPage;
 
-    List<Map<String, Object>> articleRows = articleDao.getArticleRows(limitFrom, itemsInAPage);
+    List<Article> articles = articleDao.getArticles(limitFrom, itemsInAPage);
 
-    return articleRows;
+    return articles;
   }
 }
