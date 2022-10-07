@@ -128,10 +128,10 @@ public class Rq {
     println("</script>");
   }
 
-  public void locationReplace(int id, String actionMethodName) {
+  public void replace(String msg, String redirectUri) {
     println("<script>");
-    printf("alert(%d번 글이 등록되었습니다.);\n", id);
-    printf("location.replace('%s');\n", actionMethodName);
+    printf("alert('%s');\n", msg);
+    printf("location.replace('%s');\n", redirectUri);
     println("</script>");
   }
 }

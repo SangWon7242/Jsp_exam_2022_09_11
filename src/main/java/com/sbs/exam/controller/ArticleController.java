@@ -4,15 +4,10 @@ import com.sbs.exam.Rq;
 import com.sbs.exam.dto.Article;
 import com.sbs.exam.dto.ResultData;
 import com.sbs.exam.service.ArticleService;
-import com.sbs.exam.util.DBUtil;
-import com.sbs.exam.util.SecSql;
-import com.sbs.exam.util.Util;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
-import java.io.IOException;
 import java.sql.Connection;
 import java.util.List;
 
@@ -43,6 +38,9 @@ public class ArticleController extends Controller {
       case "doWrite":
         actionDoWrite(rq);
         break;
+      default:
+        rq.println("존재하지 않는 페이지입니다.");
+        break;
     }
   }
 
@@ -56,6 +54,7 @@ public class ArticleController extends Controller {
 
     String title = req.getParameter("title");
     String body = req.getParameter("body");
+    String redirectUri = rq.getParam("redirectUri", "../article/list");
 
     if( title.length() == 0 ) {
       rq.historyBack("title을 입력해주세요.");
@@ -70,9 +69,11 @@ public class ArticleController extends Controller {
     int loginedMemberId = (int) session.getAttribute("loginedMemberId");
 
     ResultData writeRd = articleService.write(title, body, loginedMemberId);
+    int id = (int) writeRd.getBody().get("id");
 
-    rq.printf(writeRd.getMsg());
-    //rq.print(String.format("<script> alert('%d번 글이 등록되었습니다.'); location.replace('list'); </script>", id));
+    redirectUri = redirectUri.replace("[NEW_ID]", id + "");
+
+    rq.replace(writeRd.getMsg(), redirectUri);
   }
 
   private void actionShowWrite(Rq rq) {
