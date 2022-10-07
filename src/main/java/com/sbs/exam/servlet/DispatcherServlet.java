@@ -26,18 +26,18 @@ public class DispatcherServlet extends HttpServlet {
 
     Rq rq = new Rq(req, resp);
 
-    if (rq.isInvalid()) {
-      rq.appendBody("올바른 요청이 아닙니다.");
-      return;
+    if(rq.getIsInvalid()) {
+      rq.print("올바른 요청이 아닙니다.");
     }
 
     String driverName = Config.getDbDriverClassName();
 
     try {
       Class.forName(driverName);
-    } catch (ClassNotFoundException e) {
+    } catch (
+        ClassNotFoundException e) {
       System.out.printf("[ClassNotFoundException 예외, %s]", e.getMessage());
-      resp.getWriter().append("DB 드라이버 클래스 로딩 실패");
+      rq.print("DB 드라이버 클래스 로딩 실패");
       return;
     }
 
@@ -66,19 +66,23 @@ public class DispatcherServlet extends HttpServlet {
       req.setAttribute("isLogined", isLogined);
       req.setAttribute("loginedMemberId", loginedMemberId);
       req.setAttribute("loginedMemberRow", loginedMemberRow);
-      // 모든 요청을 들어가기 전에 무조건 해야 하는 일 시작
+      // 모든 요청을 들어가기 전에 무조건 해야 하는 일 끝
 
-      if ( rq.getControllerName().equals("article") ) {
-        ArticleController controller = new ArticleController(req, resp, con);
 
-        if ( rq.getActionMethodName().equals("list") ) {
-          controller.actionList();
-        }
+      switch (rq.getControllerTypeName()) {
+        case "usr":
+          ArticleController articleController = new ArticleController(req, resp, con);
+          switch (rq.getControllerName()) {
+            case "article":
+              articleController.performAction(rq);
+              break;
+          }
       }
 
-    } catch (SQLException e) {
+    } catch (
+        SQLException e) {
       e.printStackTrace();
-    } catch (SQLErrorException e) {
+    } catch ( SQLErrorException e ) {
       e.getOrigin().printStackTrace();
     } finally {
       if (con != null) {
