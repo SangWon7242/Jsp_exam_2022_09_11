@@ -128,6 +128,9 @@ public class Rq {
     println("</script>");
   }
 
+  public void setAttr(String attrName, Object attrValue) {
+    req.setAttribute(attrName, attrValue);
+  }
   public void replace(String msg, String redirectUri) {
     println("<script>");
     printf("alert('%s');\n", msg);

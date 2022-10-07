@@ -4,24 +4,25 @@ import com.sbs.exam.Rq;
 import com.sbs.exam.dto.Article;
 import com.sbs.exam.dto.ResultData;
 import com.sbs.exam.service.ArticleService;
+import com.sbs.exam.util.DBUtil;
+import com.sbs.exam.util.SecSql;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 import java.sql.Connection;
 import java.util.List;
+import java.util.Map;
 
 public class ArticleController extends Controller {
 
   private HttpServletRequest req;
   private HttpServletResponse resp;
-  private Connection con;
   private ArticleService articleService;
 
   public ArticleController(HttpServletRequest req, HttpServletResponse resp, Connection con) {
     this.req = req;
     this.resp = resp;
-    this.con = con;
 
     articleService = new ArticleService(con);
   }
@@ -31,6 +32,9 @@ public class ArticleController extends Controller {
     switch (rq.getActionMethodName()) {
       case "list":
         actionList(rq);
+        break;
+      case "detail":
+        actionDetailList(rq);
         break;
       case "write":
         actionShowWrite(rq);
@@ -42,6 +46,21 @@ public class ArticleController extends Controller {
         rq.println("존재하지 않는 페이지입니다.");
         break;
     }
+  }
+
+  private void actionDetailList(Rq rq) {
+    int id = rq.getIntParam("id", 0);
+
+    if (id == 0) {
+      rq.historyBack("id를 입력해주세요.");
+      return;
+    }
+
+    Article article = articleService.getForPrintArticleById(id);
+
+    rq.setAttr("article", article);
+
+    rq.jsp("article/detail");
   }
 
   private void actionDoWrite(Rq rq) {
@@ -90,9 +109,9 @@ public class ArticleController extends Controller {
     int totalPage = articleService.getForPrintListTotalPage();
     List<Article> articles = articleService.getForPrintArticles(page);
 
-    req.setAttribute("articles", articles);
-    req.setAttribute("page", page);
-    req.setAttribute("totalPage", totalPage);
+    rq.setAttr("articles", articles);
+    rq.setAttr("page", page);
+    rq.setAttr("totalPage", totalPage);
 
     rq.jsp("article/list");
   }
