@@ -40,14 +40,7 @@ public class ArticleDoDeleteServlet extends HttpServlet {
     try {
       con = DriverManager.getConnection(Config.getDBUrl(), Config.getDBId(), Config.getDBPw());
 
-      int id = Integer.parseInt(req.getParameter("id"));
 
-      SecSql sql = SecSql.from("DELETE");
-      sql.append("FROM article");
-      sql.append("WHERE id = ?", id);
-
-      DBUtil.delete(con, sql);
-      resp.getWriter().append(String.format("<script> alert('%d번 글이 삭제되었습니다.'); location.replace('list'); </script>", id));
 
     } catch (SQLException e) {
       e.printStackTrace();
