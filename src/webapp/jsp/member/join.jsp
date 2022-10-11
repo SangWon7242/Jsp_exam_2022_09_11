@@ -1,69 +1,67 @@
+<%@ taglib prefix="c" uri ="http://java.sun.com/jsp/jstl/core"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 
-<!doctype html>
-<head>
-  <meta charset="UTF-8">
-  <title>회원가입</title>
-</head>
-<body>
-  <h1>회원가입</h1>
+<c:set var="pageTitle" value="회원가입"></c:set>
+<%@ include file="../part/head.jspf"%>
 
-  <script>
-    let JoinFrom__submitDone = false;
+<h1>회원가입</h1>
 
-    function JoinFrom__submit(form) {
-      if ( JoinFrom__submitDone ) {
-        alert('처리 중입니다.');
-        return;
-      }
+<script>
+let JoinFrom__submitDone = false;
 
-      form.loginId.value = form.loginId.value.trim();
+function JoinFrom__submit(form) {
+  if ( JoinFrom__submitDone ) {
+    alert('처리 중입니다.');
+    return;
+  }
 
-      if ( form.loginId.value.length == 0 ) {
-        alert('로그인 아이디를 입력해주세요.');
-        form.loginId.focus();
+  form.loginId.value = form.loginId.value.trim();
 
-        return;
-      }
+  if ( form.loginId.value.length == 0 ) {
+    alert('로그인 아이디를 입력해주세요.');
+    form.loginId.focus();
 
-      form.loginPw.value = form.loginPw.value.trim();
+    return;
+  }
 
-      if ( form.loginPw.value.length == 0 ) {
-        alert('로그인 비번을 입력해주세요.');
-        form.loginPw.focus();
+  form.loginPw.value = form.loginPw.value.trim();
 
-        return;
-      }
+  if ( form.loginPw.value.length == 0 ) {
+    alert('로그인 비번을 입력해주세요.');
+    form.loginPw.focus();
 
-      form.loginPwConfirm.value = form.loginPwConfirm.value.trim();
+    return;
+  }
 
-      if ( form.loginPwConfirm.value.length == 0 ) {
-        alert('로그인 비번 확인을 입력해주요.');
-        form.loginPwConfirm.focus();
+  form.loginPwConfirm.value = form.loginPwConfirm.value.trim();
 
-        return;
-      }
+  if ( form.loginPwConfirm.value.length == 0 ) {
+    alert('로그인 비번 확인을 입력해주요.');
+    form.loginPwConfirm.focus();
 
-      if ( form.loginPw.value != form.loginPwConfirm.value ) {
-        alert('로그인 비번이 일치하지 않습니다.');
-        form.loginPwConfirm.focus();
+    return;
+  }
 
-        return;
-      }
+  if ( form.loginPw.value != form.loginPwConfirm.value ) {
+    alert('로그인 비번이 일치하지 않습니다.');
+    form.loginPwConfirm.focus();
 
-      form.name.value = form.name.value.trim();
+    return;
+  }
 
-      if ( form.name.value.length == 0 ) {
-        alert('이름을 입력해주요.');
-        form.name.focus();
+  form.name.value = form.name.value.trim();
 
-        return;
-      }
+  if ( form.name.value.length == 0 ) {
+    alert('이름을 입력해주요.');
+    form.name.focus();
 
-      form.submit();
-      JoinFrom__submitDone = true;
-    }
-  </script>
+    return;
+  }
+
+  form.submit();
+  JoinFrom__submitDone = true;
+}
+</script>
 
   <form action="doJoin" method="post" onsubmit="JoinFrom__submit(this); return false;">
     <div>로그인 아이디 : <input placeholder="로그인 아이디를 입력해주세요." name="loginId" type="text"></div>
