@@ -2,7 +2,6 @@ package com.sbs.exam.dto;
 
 import com.sbs.exam.util.Util;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import java.util.Map;
